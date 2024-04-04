@@ -1,16 +1,75 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
+<template>
+  <div class="card">
+    <Menubar :model="items">
+      <template #item="{ item, props, hasSubmenu }">
+        <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+          <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+            <span :class="item.icon" />
+            <span class="ml-2">{{ item.label }}</span>
+          </a>
+        </router-link>
+        <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
+          <span :class="item.icon" />
+          <span class="ml-2">{{ item.label }}</span>
+          <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
+        </a>
+      </template>
+    </Menubar>
+  </div>
+  <router-view/>
+</template>
+
+
+<script lang="ts" setup>
+import { ref } from "vue";
+import {useRouter, RouterLink} from 'vue-router'
+
+const router = useRouter();
+
+const items = ref([
+  {
+    label: 'Router',
+    icon: 'pi pi-palette',
+    items: [
+      {
+        label: 'Builder',
+        route: '/builder'
+      },
+      {
+        label: 'Gallery',
+        route: '/gallery'
+      }
+    ]
+  },
+  {
+    label: 'Programmatic',
+    icon: 'pi pi-link',
+    command: () => {
+      router.push('/overview');
+    }
+  },
+  {
+    label: 'External',
+    icon: 'pi pi-home',
+    items: [
+      {
+        label: 'Vue.js',
+        url: 'https://vuejs.org/'
+      },
+      {
+        label: 'Vite.js',
+        url: 'https://vuejs.org/'
+      }
+    ]
+  }
+]);
+
 </script>
 
-<template>
-  <div class="flex flex-col p-2">
-    <div class="flex flex-row items-center justify-center">
-      <img src="/tauri.svg" class="w-20 h-20 logo tauri" alt="Tauri logo" />
-      <img src="/vue.svg" class="w-20 h-20 logo vue" alt="Vue logo" />
-    </div>
 
-    <HelloWorld msg="Hello Tauri + Vue!" />
-  </div>
-</template>
+<style scoped>
+body #app header {
+  margin: 0;
+  padding: 0;
+}
+</style>

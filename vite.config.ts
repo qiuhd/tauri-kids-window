@@ -2,11 +2,18 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import { defineConfig } from 'vitest/config'
+import Components from 'unplugin-vue-components/vite';
+import {PrimeVueResolver} from 'unplugin-vue-components/resolvers';
 
 // See https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
+    Components({
+      resolvers: [
+        PrimeVueResolver()
+      ]
+    }),
     // See https://github.com/unplugin/unplugin-auto-import
     AutoImport({
       imports: ['vue'],
